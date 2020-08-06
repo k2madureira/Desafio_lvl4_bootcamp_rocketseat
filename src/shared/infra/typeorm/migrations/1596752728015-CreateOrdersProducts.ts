@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export default class CreateOrdersProducts1596752728015
   implements MigrationInterface {
@@ -22,21 +17,24 @@ export default class CreateOrdersProducts1596752728015
           {
             name: 'product_id',
             type: 'uuid',
-            isNullable: false,
+            isNullable: true,
+          },
+          {
+            name: 'order_id',
+            type: 'uuid',
+            isNullable: true,
           },
           {
             name: 'price',
             type: 'decimal',
-            precision: 8,
+            precision: 10,
             scale: 2,
-            isNullable: false,
-            isUnique: true,
+            isNullable: true,
           },
           {
             name: 'quantity',
-            type: 'int',
-            isNullable: false,
-            isUnique: true,
+            type: 'integer',
+            isNullable: true,
           },
           {
             name: 'created_at',
@@ -49,24 +47,29 @@ export default class CreateOrdersProducts1596752728015
             default: 'now()',
           },
         ],
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'orders_products',
-      new TableForeignKey({
-        name: 'OrderProduct',
-        columnNames: ['product_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'products',
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
+        foreignKeys: [
+          {
+            name: 'ProductId',
+            referencedTableName: 'products',
+            referencedColumnNames: ['id'],
+            columnNames: ['product_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          },
+          {
+            name: 'OrderId',
+            referencedTableName: 'orders',
+            referencedColumnNames: ['id'],
+            columnNames: ['order_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          },
+        ],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('orders_products', 'OrderProduct');
     await queryRunner.dropTable('orders_products');
   }
 }
