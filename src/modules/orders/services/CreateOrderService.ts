@@ -29,10 +29,10 @@ class CreateProductService {
     @inject('OrdersRepository')
     private ordersRepository: IOrdersRepository,
 
-    @inject('ProductRepository')
+    @inject('ProductsRepository')
     private productsRepository: IProductsRepository,
 
-    @inject('CustomerRepository')
+    @inject('CustomersRepository')
     private customersRepository: ICustomersRepository,
   ) {}
 
